@@ -5,6 +5,7 @@
 Added script:
 
 - `/home/runner/work/Repo/Repo/tools/smb3_coop_assist_fceux.lua`
+- `/home/runner/work/Repo/Repo/Super Mario Bros. 3 (USA).nes`
 
 Purpose:
 
@@ -14,9 +15,13 @@ Purpose:
 
 How to run in FCEUX:
 
-1. Open your SMB3 ROM in FCEUX.
+1. Open `/home/runner/work/Repo/Repo/Super Mario Bros. 3 (USA).nes` in FCEUX.
 2. Open `File -> Lua -> New Lua Script Window`.
 3. Load `/home/runner/work/Repo/Repo/tools/smb3_coop_assist_fceux.lua`.
 4. Start the level in your 2-player co-op hack.
+
+Quick result:
+
+- This repository now contains both the ROM file and the co-op assist script on this branch, so you can test directly on your machine.
 
 If behavior is not perfect with your ROM version/hack, edit RAM addresses in `CONFIG` at the top of the script.
