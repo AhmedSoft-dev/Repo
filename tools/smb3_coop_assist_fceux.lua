@@ -18,8 +18,10 @@ local CONFIG = {
   screen_width = 32,      -- in SMB3 coarse X units
   left_margin = 3,        -- allowed gap from left screen edge
   right_margin = 28,      -- allowed gap from right screen edge
-  max_follow_gap = 10,    -- max p2 distance from p1 before snapping
+  max_follow_gap = 10,    -- max p2 distance from p1 before snapping (if enable_tether=true)
   p1_camera_offset = 10,  -- camera offset from p1
+  enable_tether = false,  -- set true only if player 2 keeps drifting away
+  enable_vertical_snap = false, -- set true only if player 2 gets lost vertically
 }
 
 local function clamp(v, lo, hi)
@@ -55,11 +57,11 @@ while true do
   local right_bound = clamp(camx + CONFIG.right_margin, 0, 255)
   local bounded_p2x = clamp(p2x, left_bound, right_bound)
 
-  -- Keep player 2 near player 1 (co-op tether).
-  if math.abs(bounded_p2x - p1x) > CONFIG.max_follow_gap then
-    if bounded_p2x < p1x then
+  -- Optional: keep player 2 near player 1 (co-op tether).
+  if CONFIG.enable_tether and math.abs(bounded_p2x - p1x) > CONFIG.max_follow_gap then
+    if bounded_p2x < p1x - CONFIG.max_follow_gap then
       bounded_p2x = p1x - CONFIG.max_follow_gap
-    else
+    elseif bounded_p2x > p1x + CONFIG.max_follow_gap then
       bounded_p2x = p1x + CONFIG.max_follow_gap
     end
     bounded_p2x = clamp(bounded_p2x, left_bound, right_bound)
@@ -69,8 +71,8 @@ while true do
     write_u8(CONFIG.p2_x_addr, bounded_p2x)
   end
 
-  -- Keep player 2 roughly aligned vertically with player 1 if too far.
-  if math.abs(p2y - p1y) > 20 then
+  -- Optional: keep player 2 roughly aligned vertically with player 1.
+  if CONFIG.enable_vertical_snap and math.abs(p2y - p1y) > 20 then
     write_u8(CONFIG.p2_y_addr, p1y)
   end
 
